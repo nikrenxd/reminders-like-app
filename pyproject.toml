@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "todo-app"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic-settings = "^2.4.0"
+sqlalchemy = "^2.0.32"
+asyncpg = "^0.29.0"
+fastapi = "0.111.1"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = "^3.3.0"
+alembic = "^1.13.2"
+greenlet = "^3.0.3"
+black = "^24.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

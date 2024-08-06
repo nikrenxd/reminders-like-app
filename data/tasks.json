@@ -1,0 +1,282 @@
+[
+  {
+    "name": "Finish quarterly report",
+    "description": "Complete and submit by end of week",
+    "user_id": 1,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 1
+  },
+  {
+    "name": "Prepare presentation",
+    "description": "For Monday's team meeting",
+    "user_id": 1,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 1
+  },
+  {
+    "name": "Client meeting",
+    "description": "Discuss project updates",
+    "user_id": 1,
+    "is_important": false,
+    "priority": "high",
+    "collection_id": 1
+  },
+  {
+    "name": "Code review",
+    "user_id": 1,
+    "description": null,
+    "is_important": false,
+    "priority": "medium",
+    "collection_id": 1
+  },
+  {
+    "name": "Update project plan",
+    "description": null,
+    "user_id": 1,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 1
+  },
+  {
+    "name": "Organize files",
+    "description": null,
+    "user_id": 1,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 1
+  },
+  {
+    "name": "Email follow-up",
+    "user_id": 1,
+    "description": "Finish reading the current novel",
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 1
+  },
+  {
+    "name": "Read a book",
+    "description": "Finish reading the current novel",
+    "user_id": 1,
+    "is_important": false,
+    "priority": "medium",
+    "collection_id": 2
+  },
+  {
+    "name": "Meditation",
+    "description": null,
+    "user_id": 1,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 2
+  },
+  {
+    "name": "Morning jog",
+    "description": null,
+    "user_id": 1,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 2
+  },
+  {
+    "name": "Attend workshop",
+    "description": null,
+    "user_id": 1,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 2
+  },
+  {
+    "name": "Learn a new skill",
+    "user_id": 1,
+    "description": null,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 2
+  },
+  {
+    "name": "Plan weekend trip",
+    "description": null,
+    "user_id": 1,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 2
+  },
+  {
+    "name": "Gym workout",
+    "user_id": 1,
+    "description": null,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 3
+  },
+  {
+    "name": "Yoga session",
+    "user_id": 1,
+    "description": null,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 3
+  },
+  {
+    "name": "Diet plan",
+    "description": "Follow the new diet plan strictly",
+    "user_id": 1,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 3
+  },
+  {
+    "name": "Drink water",
+    "user_id": 1,
+    "description": null,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 3
+  },
+  {
+    "name": "Sleep 8 hours",
+    "user_id": 1,
+    "description": null,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 3
+  },
+  {
+    "name": "Track progress",
+    "description": "Log daily activities and improvements",
+    "user_id": 1,
+    "is_important": false,
+    "priority": "medium",
+    "collection_id": 3
+  },
+  {
+    "name": "Complete assignment",
+    "user_id": 2,
+    "is_important": true,
+    "description": null,
+    "priority": "high",
+    "collection_id": 4
+  },
+  {
+    "name": "Read chapters 1-3",
+    "user_id": 2,
+    "description": null,
+    "is_important": false,
+    "priority": "medium",
+    "collection_id": 4
+  },
+  {
+    "name": "Group study session",
+    "user_id": 2,
+    "description": null,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 4
+  },
+  {
+    "name": "Submit project",
+    "description": "Submit the science project",
+    "user_id": 2,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 4
+  },
+  {
+    "name": "Book flights",
+    "description": null,
+    "user_id": 2,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 5
+  },
+  {
+    "name": "Reserve hotel",
+    "description": null,
+    "user_id": 2,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 5
+  },
+  {
+    "name": "Plan itinerary",
+    "description": null,
+    "user_id": 2,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 5
+  },
+  {
+    "name": "Pack luggage",
+    "description": null,
+    "user_id": 2,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 5
+  },
+  {
+    "name": "Travel insurance",
+    "description": null,
+    "user_id": 2,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 5
+  },
+  {
+    "name": "Buy fruits",
+    "description": null,
+    "user_id": 3,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 6
+  },
+  {
+    "name": "Buy vegetables",
+    "description": null,
+    "user_id": 3,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 6
+  },
+  {
+    "name": "Get dairy products",
+    "user_id": 3,
+    "description": null,
+    "is_important": true,
+    "priority": "medium",
+    "collection_id": 6
+  },
+  {
+    "name": "Buy cleaning supplies",
+    "user_id": 3,
+    "description": null,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 6
+  },
+  {
+    "name": "Stock up on snacks",
+    "user_id": 3,
+    "description": null,
+    "is_important": false,
+    "priority": "low",
+    "collection_id": 6
+  },
+  {
+    "name": "Purchase meat",
+    "description": null,
+    "user_id": 3,
+    "is_important": true,
+    "priority": "high",
+    "collection_id": 6
+  },
+  {
+    "name": "Buy grains",
+    "description": null,
+    "user_id": 3,
+    "is_important": false,
+    "priority": "medium",
+    "collection_id": 6
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": 1,
+    "name": "Work Projects"
+  },
+  {
+    "user_id": 1,
+    "name": "Personal Goals"
+  },
+  {
+    "user_id": 1,
+    "name": "Fitness Plan"
+  },
+  {
+    "user_id": 2,
+    "name": "Study Schedule"
+  },
+  {
+    "user_id": 2,
+    "name": "Travel Plans"
+  },
+  {
+    "user_id": 3,
+    "name": "Grocery List"
+  }
+]

@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: todo
+    command: fastapi run src/main.py
+    tty: true
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/todo-app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
