@@ -9,6 +9,7 @@ class Collection(Model):
     __tablename__ = "collections"
 
     name: Mapped[str] = mapped_column(String(128), index=True, unique=True)
+    slug: Mapped[str] = mapped_column(unique=True, index=True)
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )

@@ -25,17 +25,17 @@ def get_users_with_hashed_password() -> list[dict[str, str]]:
 class DbController:
     @staticmethod
     async def populate_db_with_users_and_tasks():
-        # users = get_users_with_hashed_password()
-        # collections = get_json_data("collections")
+        users = get_users_with_hashed_password()
+        collections = get_json_data("collections")
         tasks = get_json_data("tasks")
 
         async with Session() as session:
-            # insert_users = insert(User).values(users)
-            # insert_collections = insert(Collection).values(collections)
+            insert_users = insert(User).values(users)
+            insert_collections = insert(Collection).values(collections)
             insert_tasks = insert(Task).values(tasks)
 
-            # await session.execute(insert_users)
-            # await session.execute(insert_collections)
+            await session.execute(insert_users)
+            await session.execute(insert_collections)
             await session.execute(insert_tasks)
             await session.commit()
 

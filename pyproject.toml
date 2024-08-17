@@ -10,12 +10,14 @@ python = "^3.11"
 pydantic-settings = "^2.4.0"
 sqlalchemy = "^2.0.32"
 asyncpg = "^0.29.0"
-fastapi = "0.111.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-jose = "^3.3.0"
 alembic = "^1.13.2"
 greenlet = "^3.0.3"
 black = "^24.8.0"
+fastapi = {extras = ["standard"], version = "^0.112.0"}
+python-slugify = "^8.0.4"
+ruff = "^0.6.1"
 
 
 [build-system]
