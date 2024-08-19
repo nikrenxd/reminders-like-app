@@ -1,4 +1,4 @@
-from sqlalchemy import and_, select, insert, update, delete
+from sqlalchemy import and_, select, insert, update, delete, ScalarSelect
 
 from src.services.base import BaseService
 from src.database import Session
@@ -6,11 +6,15 @@ from src.database import Session
 from src.users.models import User
 from src.tasks.models import Task
 from src.collections.models import Collection
-from src.tasks.schemas import STaskSingle
+from src.tasks.schemas import STaskSingle, STaskCreate, STaskUpdate
 
 
 def get_query_filters(**query_filters: dict) -> dict:
     return {param: value for param, value in query_filters.items() if value is not None}
+
+
+def get_collection_id_stmt(slug: str) -> ScalarSelect:
+    return select(Collection.id).filter_by(slug=slug).scalar_subquery()
 
 
 class TaskService(BaseService):
@@ -77,21 +81,18 @@ class TaskService(BaseService):
             return res.scalars().all()
 
     @classmethod
-    async def add(cls, **data):
-        # TODO: Try to optimize INSERT query, from 2 queries to 1
-        collection_name = data.pop("collection_name")
-        collection_id_stmt = select(Collection.id).filter_by(slug=collection_name)
+    async def add(cls, collection_name: str, user_id: int, task: STaskCreate) -> int:
+        task_data = task.model_dump(exclude_unset=True)
+
+        collection_id = get_collection_id_stmt(collection_name)
+
+        insert_task = (
+            insert(cls.model)
+            .values(collection_id=collection_id, user_id=user_id, **task_data)
+            .returning(cls.model.id)
+        )
 
         async with Session() as session:
-            res = await session.execute(collection_id_stmt)
-            collection_id = res.scalar()
-
-            insert_task = (
-                insert(cls.model)
-                .values(collection_id=collection_id, **data)
-                .returning(cls.model.id)
-            )
-
             task_id = await session.execute(insert_task)
             await session.commit()
 
@@ -99,57 +100,45 @@ class TaskService(BaseService):
 
     @classmethod
     async def update_task(
-        cls, collection_name: str, task_id: int, user_id: int, task
+        cls, collection_name: str, task_id: int, user_id: int, task: STaskUpdate
     ) -> STaskSingle:
         task_data = task.model_dump(exclude_unset=True)
 
-        # TODO: Try to optimize UPDATE query, from 2 queries to 1
-        collection_id_stmt = select(Collection.id).filter_by(slug=collection_name)
+        collection_id = get_collection_id_stmt(collection_name)
+
+        update_task = (
+            update(cls.model)
+            .filter_by(
+                collection_id=collection_id,
+                id=task_id,
+                user_id=user_id,
+            )
+            .values(**task_data)
+            .returning(cls.model)
+        )
 
         async with Session() as session:
-            res = await session.execute(collection_id_stmt)
-            collection_id = res.scalar()
-
-            update_task = (
-                update(cls.model)
-                .filter(
-                    and_(
-                        cls.model.collection_id == collection_id,
-                        cls.model.id == task_id,
-                        cls.model.user_id == user_id,
-                    )
-                )
-                .values(**task_data)
-                .returning(cls.model)
-            )
-
             updated_task = await session.execute(update_task)
             await session.commit()
 
             return updated_task.scalar_one_or_none()
 
     @classmethod
-    async def delete_task(cls, collection_name: str, task_id: int, user_id: int):
-        # TODO: Try to optimize DELETE query, from 2 queries to 1
-        collection_id_stmt = select(Collection.id).filter_by(slug=collection_name)
+    async def delete_task(cls, collection_name: str, task_id: int, user_id: int) -> int:
+        collection_id = get_collection_id_stmt(collection_name)
+
+        delete_task_stmt = (
+            delete(cls.model)
+            .filter_by(
+                collection_id=collection_id,
+                id=task_id,
+                user_id=user_id,
+            )
+            .returning(cls.model.id)
+        )
 
         async with Session() as session:
-            res = await session.execute(collection_id_stmt)
-            collection_id = res.scalar()
-
-            delete_task_stmt = (
-                delete(cls.model)
-                .filter(
-                    and_(
-                        cls.model.collection_id == collection_id,
-                        cls.model.id == task_id,
-                        cls.model.user_id == user_id,
-                    )
-                )
-                .returning(cls.model.id)
-            )
-
             task_id = await session.execute(delete_task_stmt)
             await session.commit()
 
-        return task_id
+        return task_id.scalar()

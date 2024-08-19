@@ -42,12 +42,7 @@ async def create_task(
     user: Annotated[User, Depends(get_current_user)],
 ) -> int:
     return await TaskService.add(
-        name=body.name,
-        description=body.description,
-        priority=body.priority,
-        do_until=body.do_until,
-        user_id=user.id,
-        collection_name=collection_name,
+        collection_name=collection_name, user_id=user.id, task=body
     )
 
 

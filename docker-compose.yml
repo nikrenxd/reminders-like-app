@@ -3,7 +3,7 @@ services:
     build:
       context: .
     container_name: todo
-    command: fastapi run src/main.py
+    command: "poetry run fastapi run src/main.py"
     tty: true
     ports:
       - 8000:8000

@@ -1,9 +1,16 @@
-FROM python:3.11
+FROM python:3.11.9-slim-bullseye
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /todo-app
 
-COPY requirements.txt .
+ADD pyproject.toml /todo-app
 
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip
+RUN pip install poetry
+
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-root --no-interaction --no-ansi
 
 COPY . .
