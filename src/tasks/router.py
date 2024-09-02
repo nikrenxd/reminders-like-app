@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, Query
 from typing import Annotated
 
+
 from src.users.models import User
 from src.users.dependencies import get_current_user
 
@@ -24,7 +25,8 @@ async def get_all_tasks(params: Annotated[FindParams, Depends()]) -> list[STask]
     )
 
 
-@router.get("/search")
+# TODO: Update search endpoint
+@router.get("/search", include_in_schema=False)
 async def search_task(
     search_by_name: Annotated[str, Query()],
     params: Annotated[FindParams, Depends()],
@@ -83,5 +85,14 @@ async def delete_task(params: Annotated[ParamsWithId, Depends()]):
 
 
 @router.patch("/{task_id}/done")
-async def done_task(body: STaskDone, params: Annotated[ParamsWithId, Depends()]):
-    await TaskService.update_task(params.task_id, params.user.id, body)
+async def done_task(
+    params: Annotated[ParamsWithId, Depends()],
+    done_param: Annotated[bool, Query()] = True,
+):
+    task_done = STaskDone(is_done=done_param)
+    await TaskService.update_task(
+        params.collection_name,
+        params.task_id,
+        params.user.id,
+        task_done,
+    )

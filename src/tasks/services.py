@@ -6,7 +6,7 @@ from src.database import Session
 from src.users.models import User
 from src.tasks.models import Task
 from src.collections.models import Collection
-from src.tasks.schemas import STaskSingle, STaskCreate, STaskUpdate
+from src.tasks.schemas import STaskSingle, STaskCreate
 
 
 def get_query_filters(**query_filters: dict) -> dict:
@@ -100,7 +100,7 @@ class TaskService(BaseService):
 
     @classmethod
     async def update_task(
-        cls, collection_name: str, task_id: int, user_id: int, task: STaskUpdate
+        cls, collection_name: str, task_id: int, user_id: int, task
     ) -> STaskSingle:
         task_data = task.model_dump(exclude_unset=True)
 

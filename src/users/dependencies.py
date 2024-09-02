@@ -1,3 +1,4 @@
+from typing import Annotated
 from datetime import datetime
 
 from fastapi import Request, Depends
@@ -8,7 +9,7 @@ from src.exceptions import (
     TokenAbsentException,
     IncorrectTokenFormatException,
     TokenExpiredException,
-    UserIsNotPresentException
+    UserIsNotPresentException,
 )
 
 from src.users.models import User
@@ -23,11 +24,9 @@ def get_token(request: Request) -> str:
     return token
 
 
-async def get_current_user(token: str = Depends(get_token)) -> User:
+async def get_current_user(token: Annotated[get_token, Depends()]) -> User:
     try:
-        data = jwt.decode(
-            token, settings.JWT_SECRET, settings.JWT_ALGORITHM
-        )
+        data = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGORITHM)
     except JWTError:
         raise IncorrectTokenFormatException
 
