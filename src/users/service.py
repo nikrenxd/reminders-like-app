@@ -1,4 +1,4 @@
-from src.services.base import BaseService
+from src.services import BaseService
 
 from src.users.models import User
 

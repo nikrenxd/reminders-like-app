@@ -5,7 +5,7 @@ from slugify import slugify
 from src.collections.models import Collection
 from src.collections.schemas import SCollectionUpdate
 from src.database import Session
-from src.services.base import BaseService
+from src.services import BaseService
 
 
 class CollectionService(BaseService):

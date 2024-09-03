@@ -36,6 +36,7 @@ class STask(BaseModel):
     name: str
     priority: str
     is_important: bool
+    is_done: bool
     do_until: datetime.date | None
     created_at: datetime.datetime
     updated_at: datetime.datetime

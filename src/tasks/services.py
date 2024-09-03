@@ -1,63 +1,55 @@
-from sqlalchemy import and_, select, insert, update, delete, ScalarSelect
+from sqlalchemy import and_, select, update, delete, ScalarSelect
 
-from src.services.base import BaseService
+from src.services import BaseService
 from src.database import Session
 
 from src.users.models import User
 from src.tasks.models import Task
 from src.collections.models import Collection
-from src.tasks.schemas import STaskSingle, STaskCreate
+from src.tasks.schemas import STaskSingle, STaskCreate, STaskUpdate, STaskDone
 
 
 def get_query_filters(**query_filters: dict) -> dict:
     return {param: value for param, value in query_filters.items() if value is not None}
 
 
-def get_collection_id_stmt(slug: str) -> ScalarSelect:
-    return select(Collection.id).filter_by(slug=slug).scalar_subquery()
+def get_collection_id_stmt(slug: str, user_id: int) -> ScalarSelect:
+    return select(Collection.id).filter_by(user_id=user_id, slug=slug).scalar_subquery()
 
 
 class TaskService(BaseService):
     model = Task
 
     @classmethod
-    async def get_all(cls, collection_name, user_id, **filters):
+    async def get_all(cls, collection_slug, user_id, **filters):
         query_filters = get_query_filters(**filters)
 
         get_tasks = (
             select(cls.model)
-            .join(Collection, cls.model.collection_id == Collection.id)
+            .join(Collection, cls.model.collection_id == Collection.id, isouter=True)
             .filter(
                 and_(
-                    Collection.slug == collection_name,
+                    Collection.slug == collection_slug,
                     cls.model.user_id == user_id,
                 )
             )
-        ).cte("get_tasks")
+            .cte("get_tasks")
+        )
 
-        stmt = select(
-            get_tasks.c.id,
-            get_tasks.c.name,
-            get_tasks.c.priority,
-            get_tasks.c.priority,
-            get_tasks.c.is_important,
-            get_tasks.c.do_until,
-            get_tasks.c.created_at,
-            get_tasks.c.updated_at,
-        ).filter_by(**query_filters)
+        stmt = select(get_tasks).filter_by(**query_filters)
 
         async with Session() as session:
             res = await session.execute(stmt)
             return res.mappings().all()
 
     @classmethod
-    async def get_one_by_fields(cls, collection_name: str, task_id: int, user_id: int):
+    async def get_one_by_fields(cls, collection_slug: str, task_id: int, user_id: int):
         stmt = (
             select(cls.model)
             .join(Collection, cls.model.collection_id == Collection.id)
             .filter(
                 and_(
-                    Collection.slug == collection_name,
+                    Collection.slug == collection_slug,
                     cls.model.id == task_id,
                     cls.model.user_id == user_id,
                 )
@@ -81,30 +73,34 @@ class TaskService(BaseService):
             return res.scalars().all()
 
     @classmethod
-    async def add(cls, collection_name: str, user_id: int, task: STaskCreate) -> int:
+    async def add_task(
+        cls,
+        collection_slug: str,
+        user_id: int,
+        task: STaskCreate,
+    ) -> int | None:
         task_data = task.model_dump(exclude_unset=True)
 
-        collection_id = get_collection_id_stmt(collection_name)
-
-        insert_task = (
-            insert(cls.model)
-            .values(collection_id=collection_id, user_id=user_id, **task_data)
-            .returning(cls.model.id)
+        collection_id = get_collection_id_stmt(collection_slug, user_id)
+        task_id = await super().add(
+            collection_id=collection_id,
+            user_id=user_id,
+            **task_data,
         )
 
-        async with Session() as session:
-            task_id = await session.execute(insert_task)
-            await session.commit()
-
-        return task_id.scalar()
+        return task_id
 
     @classmethod
     async def update_task(
-        cls, collection_name: str, task_id: int, user_id: int, task
+        cls,
+        collection_slug: str,
+        task_id: int,
+        user_id: int,
+        task: STaskUpdate | STaskDone,
     ) -> STaskSingle:
         task_data = task.model_dump(exclude_unset=True)
 
-        collection_id = get_collection_id_stmt(collection_name)
+        collection_id = get_collection_id_stmt(collection_slug)
 
         update_task = (
             update(cls.model)
@@ -124,8 +120,8 @@ class TaskService(BaseService):
             return updated_task.scalar_one_or_none()
 
     @classmethod
-    async def delete_task(cls, collection_name: str, task_id: int, user_id: int) -> int:
-        collection_id = get_collection_id_stmt(collection_name)
+    async def delete_task(cls, collection_slug: str, task_id: int, user_id: int) -> int:
+        collection_id = get_collection_id_stmt(collection_slug)
 
         delete_task_stmt = (
             delete(cls.model)
