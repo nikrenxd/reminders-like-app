@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import jwt
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
 from src.users.service import UserService
@@ -21,14 +22,16 @@ def create_jwt_token(data: dict) -> str:
     to_encode = data.copy()
     expiration_time = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expiration_time})
-    token = jwt.encode(
-        to_encode, settings.JWT_SECRET, settings.JWT_ALGORITHM
-    )
+    token = jwt.encode(to_encode, settings.JWT_SECRET, settings.JWT_ALGORITHM)
     return token
 
 
-async def authenticate_user(email: str, password: str) -> User | None:
-    existing_user = await UserService.get_one_by_fields(email=email)
+async def authenticate_user(
+    session: AsyncSession,
+    email: str,
+    password: str,
+) -> User | None:
+    existing_user = await UserService.get_one_by_fields(session, email=email)
 
     if not existing_user:
         return None

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import text
 
@@ -22,3 +22,8 @@ class Model(DeclarativeBase):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow
     )
+
+
+async def get_session() -> AsyncSession:
+    async with Session() as session:
+        yield session

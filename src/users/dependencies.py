@@ -3,8 +3,10 @@ from datetime import datetime
 
 from fastapi import Request, Depends
 from jose import jwt, JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
+from src.database import get_session
 from src.exceptions import (
     TokenAbsentException,
     IncorrectTokenFormatException,
@@ -24,7 +26,10 @@ def get_token(request: Request) -> str:
     return token
 
 
-async def get_current_user(token: Annotated[get_token, Depends()]) -> User:
+async def get_current_user(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    token: Annotated[get_token, Depends()],
+) -> User:
     try:
         data = jwt.decode(token, settings.JWT_SECRET, settings.JWT_ALGORITHM)
     except JWTError:
@@ -38,7 +43,7 @@ async def get_current_user(token: Annotated[get_token, Depends()]) -> User:
     if not user_id:
         raise UserIsNotPresentException
 
-    user: User = await UserService.get_one_by_fields(id=int(user_id))
+    user: User = await UserService.get_one_by_fields(session, id=int(user_id))
     if not user:
         raise UserIsNotPresentException
 
