@@ -3,7 +3,7 @@ from fastapi import APIRouter, status, Response, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.users.service import UserService
+from src.users.services import UserService
 from src.users.auth import get_hashed_password, create_jwt_token, authenticate_user
 from src.users.schemas import SUserCreate
 

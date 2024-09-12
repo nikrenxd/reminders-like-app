@@ -15,7 +15,7 @@ from src.exceptions import (
 )
 
 from src.users.models import User
-from src.users.service import UserService
+from src.users.services import UserService
 
 
 def get_token(request: Request) -> str:

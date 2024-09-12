@@ -4,7 +4,7 @@ from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from src.users.service import UserService
+from src.users.services import UserService
 from src.users.models import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
