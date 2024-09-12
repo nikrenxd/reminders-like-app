@@ -36,6 +36,6 @@ class Task(Model):
     user: Mapped["User"] = relationship(back_populates="tasks")
     collection: Mapped["Collection"] = relationship(back_populates="tasks")
     tags_include: Mapped[list["Tag"]] = relationship(
-        back_populates="task_include",
+        back_populates="tasks_include",
         secondary="tags_tasks",
     )

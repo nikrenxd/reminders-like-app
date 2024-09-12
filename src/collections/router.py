@@ -1,6 +1,8 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
+
+from fastapi_cache.decorator import cache
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.collections.schemas import SCollection, SCollectionCreate
@@ -14,11 +16,12 @@ from src.collections.dependencies import UpdateParams, ParamsWithId
 router = APIRouter(prefix="/collections", tags=["Collections"])
 
 
-@router.get("/")
+@router.get("/", response_model=list[SCollection])
+@cache(expire=15)
 async def get_collections(
     session: Annotated[AsyncSession, Depends(get_session)],
     user: Annotated[User, Depends(get_current_user)],
-) -> list[SCollection]:
+):
     return await CollectionService.get_all(session, user=user)
 
 
@@ -31,11 +34,11 @@ async def create_collection(
     await CollectionService.add(session, name=body.name, user_id=user.id)
 
 
-@router.put("/{collection_id}")
+@router.put("/{collection_id}", response_model=SCollection)
 async def update_collection(
     session: Annotated[AsyncSession, Depends(get_session)],
     params: Annotated[UpdateParams, Depends()],
-) -> SCollection:
+):
     collection = await CollectionService.update_collection(
         session,
         params.collection_id,

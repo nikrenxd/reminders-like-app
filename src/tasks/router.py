@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status, Query
+from fastapi_cache.decorator import cache
 from typing import Annotated
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,11 +17,12 @@ from src.exceptions import NotFoundException
 router = APIRouter(prefix="/{collection_slug}/tasks", tags=["Tasks"])
 
 
-@router.get("/")
+@router.get("/", response_model=list[STask])
+@cache(expire=15)
 async def get_all_tasks(
     session: Annotated[AsyncSession, Depends(get_session)],
     params: Annotated[FindParams, Depends()],
-) -> list[STask]:
+):
     tasks = await TaskService.get_all(
         session,
         collection_slug=params.collection_slug,
@@ -65,11 +67,11 @@ async def search_task(
     )
 
 
-@router.get("/{task_id}")
+@router.get("/{task_id}", response_model=STaskSingle)
 async def get_task(
     session: Annotated[AsyncSession, Depends(get_session)],
     params: Annotated[ParamsWithId, Depends()],
-) -> STaskSingle:
+):
     task = await TaskService.get_one_by_fields(
         session,
         collection_slug=params.collection_slug,
@@ -83,11 +85,11 @@ async def get_task(
     return task
 
 
-@router.put("/{task_id}")
+@router.put("/{task_id}", response_model=STaskSingle)
 async def update_task(
     session: Annotated[AsyncSession, Depends(get_session)],
     params: Annotated[UpdateParams, Depends()],
-) -> STaskSingle:
+):
     task = await TaskService.update_task(
         session,
         params.collection_slug,
@@ -118,12 +120,12 @@ async def delete_task(
         raise NotFoundException
 
 
-@router.patch("/{task_id}/done")
+@router.patch("/{task_id}/done", response_model=STaskSingle)
 async def done_task(
     params: Annotated[ParamsWithId, Depends()],
     session: Annotated[AsyncSession, Depends(get_session)],
     done_param: Annotated[bool, Query()] = True,
-) -> STaskSingle:
+):
     task_done = STaskDone(is_done=done_param)
 
     task = await TaskService.update_task(

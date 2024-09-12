@@ -9,6 +9,10 @@ class Tag(Model):
 
     name: Mapped[str] = mapped_column(String(32), index=True)
 
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True,
+    )
     tasks_include: Mapped[list["Task"]] = relationship(
         back_populates="tags_include",
         secondary="tags_tasks",
