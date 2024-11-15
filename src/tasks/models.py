@@ -7,7 +7,6 @@ from sqlalchemy import String, ForeignKey
 from src.database import Model
 from src.users.models import User
 from src.collections.models import Collection
-from src.tags.models import Tag
 
 
 class Priority(enum.Enum):
@@ -35,7 +34,3 @@ class Task(Model):
 
     user: Mapped["User"] = relationship(back_populates="tasks")
     collection: Mapped["Collection"] = relationship(back_populates="tasks")
-    tags_include: Mapped[list["Tag"]] = relationship(
-        back_populates="tasks_include",
-        secondary="tags_tasks",
-    )

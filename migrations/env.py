@@ -12,7 +12,6 @@ from src.config import settings
 from src.users.models import User as User
 from src.collections.models import Collection as Collection
 from src.tasks.models import Task as Task
-from src.tags.models import Tag as Tag, TagTask as TagTask
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
